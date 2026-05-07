@@ -186,7 +186,6 @@ SPOHE-VGGNet/
 ├── training/
 ├── evaluation/
 ├── visualization/
-├── results/
 ├── README.md
 ├── requirements.txt
 └── LICENSE

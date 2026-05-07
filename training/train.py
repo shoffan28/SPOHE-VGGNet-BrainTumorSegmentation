@@ -14,6 +14,18 @@ BATCH_SIZE = 8
 EPOCHS = 50
 LR = 1e-3
 
+PREPROCESSING_METHOD = "pso_he" 
+#PREPROCESSING_METHOD = "he"
+#PREPROCESSING_METHOD = "clahe"
+#PREPROCESSING_METHOD = "clahe_he"
+#PREPROCESSING_METHOD = "pso_ie"
+#PREPROCESSING_METHOD = "pso_he"
+
+images, masks, _, _ = load_images_masks(
+    root_dir=TRAIN_PATH,
+    image_size=IMAGE_SIZE,
+    preprocessing_method=PREPROCESSING_METHOD
+)
 
 def main():
     images, masks, _, _ = load_images_and_masks(

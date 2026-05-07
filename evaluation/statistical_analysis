@@ -1,0 +1,74 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import wilcoxon
+
+
+def run_wilcoxon_analysis(csv_path, proposed_model="SPOHE-VGGNet"):
+    """
+    Perform Wilcoxon signed-rank statistical analysis.
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to CSV file containing fold-wise results.
+
+    proposed_model : str
+        Name of the proposed model column.
+
+    CSV Format Example
+    ------------------
+    Fold,U-Net,ResUNet,AT-UNet,SPOHE-VGGNet
+    1,0.90,0.91,0.92,0.94
+    2,0.91,0.93,0.91,0.95
+    """
+
+    df = pd.read_csv(csv_path)
+
+    if proposed_model not in df.columns:
+        raise ValueError(f"{proposed_model} not found in CSV.")
+
+    proposed_scores = df[proposed_model].values
+
+    statistical_results = []
+
+    for model_name in df.columns:
+        if model_name in ["Fold", proposed_model]:
+            continue
+
+        baseline_scores = df[model_name].values
+
+        statistic, p_value = wilcoxon(
+            proposed_scores,
+            baseline_scores
+        )
+
+        statistical_results.append({
+            "Comparison": f"{proposed_model} vs {model_name}",
+            "Statistic": statistic,
+            "p-value": p_value,
+            "Significant (p < 0.05)": (
+                "Yes" if p_value < 0.05 else "No"
+            )
+        })
+
+    statistical_df = pd.DataFrame(statistical_results)
+
+    statistical_df.to_csv(
+        "wilcoxon_significance_results.csv",
+        index=False
+    )
+
+    print("\n====================================================")
+    print("Wilcoxon Signed-Rank Statistical Significance Results")
+    print("====================================================\n")
+
+    print(statistical_df)
+
+    return statistical_df
+
+
+if __name__ == "__main__":
+    run_wilcoxon_analysis(
+        csv_path="../results/fold_results.csv",
+        proposed_model="SPOHE-VGGNet"
+    )

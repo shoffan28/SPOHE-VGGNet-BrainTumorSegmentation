@@ -3,8 +3,9 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from preprocessing.pso_he import apply_pso_he
+from preprocessing.preprocessing_methods import apply_preprocessing
 
-def load_images_masks(root_dir, image_size=256, apply_pso=True):
+def load_images_masks(root_dir, image_size=256, preprocessing_method="pso_he"):
     image_paths = sorted(glob.glob(os.path.join(root_dir, "images", "**", "*.png"), recursive=True))
     mask_paths = sorted(glob.glob(os.path.join(root_dir, "masks", "**", "*.png"), recursive=True))
 
@@ -14,10 +15,9 @@ def load_images_masks(root_dir, image_size=256, apply_pso=True):
         img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         img = cv2.resize(img, (image_size, image_size))
 
-        if apply_pso:
-            img, _ = apply_pso_he(img)
+        img = apply_preprocessing(img, method=preprocessing_method)
 
-        img = cv2.equalizeHist(img.astype(np.uint8))
+        img = img.astype(np.uint8)
         img = cv2.merge([img, img, img])
 
         mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)

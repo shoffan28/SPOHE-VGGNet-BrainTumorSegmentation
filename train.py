@@ -8,7 +8,7 @@ from models.spohe_vggnet import build_spohe_vggnet
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-TRAIN_PATH = "/net/pr2/projects/plgrid/plggman01/Brain Tumor Segmentation"
+TRAIN_PATH = "./Brain Tumor Segmentation"
 IMAGE_SIZE = 256
 BATCH_SIZE = 8
 EPOCHS = 50
